@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cmt.moduleproperty.repository.PropertyRepository">
+    <insert id="createProperty" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO property
+        (name, full_name, type)
+        VALUES
+        (#{name}, #{name}, #{type})
+    </insert>
+    <select id="selectProperty" resultType="Property">
+        SELECT name, full_name, type, value, created_at, updated_at
+        FROM property
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="fullName != null">
+                AND full_name = #{fullName}
+            </if>
+        </where>
+    </select>
+    <!--    ..... -->
+    <select id="findAllValueTypeProperties" resultType="Property">
+        SELECT name, full_name, type, value, created_at, updated_at
+        FROM property
+        WHERE type='value'
+    </select>
+    <select id="findChildProperties" resultType="Property">
+        SELECT name, full_name, type, value, created_at, updated_at
+        FROM property
+        WHERE parent_id =
+    </select>
+    <update id="updatePropertyValue">
+        UPDATE property
+        SET
+            value = #{value}
+        WHERE full_name = #{propertyFullName} AND type = 'value'
+    </update>
+</mapper>
