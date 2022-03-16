@@ -12,11 +12,19 @@ import java.time.LocalDateTime;
 @ToString
 public class PropertyDto {
     Long id;
-    String name;
     String fullName;
     PropertyType type;
-    Long parentId;
     String value;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+
+    public String getName(){
+        return fullName.substring(fullName.lastIndexOf(".")+1);
+    }
+
+    public String getParentFullName(){
+        int dotLastIndexOf = fullName.lastIndexOf(".");
+        if(dotLastIndexOf == -1){
+            return null;
+        }
+        return fullName.substring(0,dotLastIndexOf);
+    }
 }

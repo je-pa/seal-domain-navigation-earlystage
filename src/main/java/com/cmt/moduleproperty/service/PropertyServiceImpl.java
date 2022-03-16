@@ -2,12 +2,14 @@ package com.cmt.moduleproperty.service;
 
 import com.cmt.moduleproperty.Property;
 import com.cmt.moduleproperty.PropertyType;
+import com.cmt.moduleproperty.dto.ChangeParentPropertyDto;
 import com.cmt.moduleproperty.dto.PropertyDto;
 import com.cmt.moduleproperty.repository.PropertyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PropertyServiceImpl implements PropertyService{
@@ -15,28 +17,33 @@ public class PropertyServiceImpl implements PropertyService{
 
     @Override
     public Property saveProperty(String propertyFullName, String value) {
-        if(selectPropertyByPropertyFullName(propertyFullName) != null){
-            return updatePropertyValue(propertyFullName,value);
+        if(doPropertyExist(propertyFullName)){
+            return updatePropertyValue(propertyFullName, value);
         }
-
-        String[] names = propertyFullName.split(".");
-        for(int i=0 ; i<names.length ; i++){
-
+        if(createProperty(propertyFullName,PropertyType.VALUE) != null){
+            return updatePropertyValue(propertyFullName, value);
         }
         return null;
     }
 
     @Override
     public List<Property> findChildProperties(String propertyFullName) {
-        if(selectPropertyByPropertyFullName(propertyFullName) != null){
-
+        if(doPropertyExist(propertyFullName)){
+            return propertyRepository.findChildProperties(propertyFullName);
         }
         return null;
     }
 
     @Override
+    public Property findProperty(String propertyFullName){
+        PropertyDto propertyDto = new PropertyDto();
+        propertyDto.setFullName(propertyFullName);
+        return propertyRepository.selectProperty(propertyDto);
+    }
+
+    @Override
     public String findValue(String propertyFullName) {
-        return selectPropertyByPropertyFullName(propertyFullName).getValue();
+        return findProperty(propertyFullName).getValue();
     }
 
     @Override
@@ -46,32 +53,47 @@ public class PropertyServiceImpl implements PropertyService{
 
     @Override
     public boolean deleteProperty(String propertyFullName) {
-        return false;
+        if(!doPropertyExist(propertyFullName) && findChildProperties(propertyFullName).size()>0){
+            return false;
+        }
+        return (propertyRepository.deleteProperty(propertyFullName) == 1);
     }
 
-    public boolean changeParent(String propertyFullName, String parentGroupPropertyFullName){
-        return false;
-    }//하위 풀네임...
-
-    public Property createProperty(String propertyName, PropertyType propertyType){
+    public Property createProperty(String propertyFullName, PropertyType propertyType){
+        if(doPropertyExist(propertyFullName)){
+            return null;
+        }
         PropertyDto propertyDto = new PropertyDto();
-        propertyDto.setName(propertyName);
+        propertyDto.setFullName(propertyFullName);
+
+        String parentFullName = propertyDto.getParentFullName();
+        if(parentFullName != null){
+            if(!doPropertyExist(propertyFullName)){
+                createProperty(parentFullName, PropertyType.GROUP); //
+            }else if(findProperty(parentFullName).getType() != PropertyType.GROUP){
+                return null;
+            }
+        }
+
         propertyDto.setType(propertyType);
         propertyRepository.createProperty(propertyDto);
 
         return propertyRepository.selectProperty(propertyDto);
     }
 
+
     public Property updatePropertyValue(String propertyFullName, String value){
         if(propertyRepository.updatePropertyValue(propertyFullName,value)==1){
-            return selectPropertyByPropertyFullName(propertyFullName);
+            return findProperty(propertyFullName);
         }
         return null;
     }
 
-    public Property selectPropertyByPropertyFullName(String propertyFullName){
-        PropertyDto propertyDto = new PropertyDto();
-        propertyDto.setFullName(propertyFullName);
-        return propertyRepository.selectProperty(propertyDto);
+    public boolean doPropertyExist(String propertyFullName){
+        if(findProperty(propertyFullName) != null){
+            return true;
+        }
+        return false;
     }
+
 }

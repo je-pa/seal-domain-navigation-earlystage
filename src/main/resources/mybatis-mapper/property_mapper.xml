@@ -6,9 +6,19 @@
 <mapper namespace="com.cmt.moduleproperty.repository.PropertyRepository">
     <insert id="createProperty" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO property
-        (name, full_name, type)
+        (
+             name, full_name, type, created_at
+            <if test="parentFullName != null">
+            , parent_id
+            </if>
+        )
         VALUES
-        (#{name}, #{name}, #{type})
+        (
+             #{name}, #{fullName}, #{type}, NOW()
+            <if test="parentFullName != null">
+            , (SELECT a.id FROM property a WHERE a.full_name = #{parentFullName})
+            </if>
+         )
     </insert>
     <select id="selectProperty" resultType="Property">
         SELECT name, full_name, type, value, created_at, updated_at
@@ -27,16 +37,30 @@
         SELECT name, full_name, type, value, created_at, updated_at
         FROM property
         WHERE type='value'
+-- 순서 정렬
     </select>
     <select id="findChildProperties" resultType="Property">
         SELECT name, full_name, type, value, created_at, updated_at
         FROM property
-        WHERE parent_id =
+        WHERE parent_id = (SELECT id FROM property WHERE full_name = #{propertyFullName})
     </select>
     <update id="updatePropertyValue">
         UPDATE property
         SET
             value = #{value}
+            ,updated_at = NOW()
         WHERE full_name = #{propertyFullName} AND type = 'value'
     </update>
+    <update id="changeParent">
+        UPDATE property
+        SET
+           full_name = #{newPropertyFullName}
+          ,parent_id = (SELECT id FROM property WHERE full_name = #{parentGroupPropertyFullName})
+          ,updated_at = NOW()
+        WHERE full_name = #{propertyFullName}
+    </update>
+    <delete id="deleteProperty">
+        DELETE FROM property
+        WHERE full_name = #{propertyFullName}
+    </delete>
 </mapper>
