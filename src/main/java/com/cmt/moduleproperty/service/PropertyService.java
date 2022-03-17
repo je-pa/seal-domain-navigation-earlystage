@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface PropertyService {
     Property saveProperty(String propertyFullName, String value);
     List<Property> findChildProperties(String propertyFullName);
-    Property findProperty(String propertyFullName); //optional
+    Optional<Property> findProperty(String propertyFullName); //optional
     String findValue(String propertyFullName);
     List<Property> findAllValueTypeProperties();
     boolean deleteProperty(String propertyFullName);

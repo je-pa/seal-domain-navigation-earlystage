@@ -11,20 +11,10 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class PropertyDto {
-    Long id;
+    String name;
     String fullName;
     PropertyType type;
     String value;
-
-    public String getName(){
-        return fullName.substring(fullName.lastIndexOf(".")+1);
-    }
-
-    public String getParentFullName(){
-        int dotLastIndexOf = fullName.lastIndexOf(".");
-        if(dotLastIndexOf == -1){
-            return null;
-        }
-        return fullName.substring(0,dotLastIndexOf);
-    }
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
 }

@@ -1,11 +1,14 @@
 package com.cmt.moduleproperty;
 
+import com.cmt.moduleproperty.dto.PropertyDto;
+import com.cmt.moduleproperty.mapper.PropertyMapper;
 import com.cmt.moduleproperty.service.PropertyServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +32,7 @@ class ModulePropertyApplicationTests {
 
     @Test
     void findValueTest(){
-        String value = propertyServiceImpl.findValue("a.b.c.d.g.h");
+        String value = propertyServiceImpl.findValue("adgae");
 //        String value2 = propertyServiceImpl.findValue("a.b.c.d.g.h");
 //        String value3 = propertyServiceImpl.findValue("ta.b.c");
     }
@@ -52,8 +55,9 @@ class ModulePropertyApplicationTests {
     }
 
     @Test
-    void selectPropertyByPropertyFullNameTest(){
-        assertEquals(null, propertyServiceImpl.findProperty("a"));
+    void findPropertyTest(){
+        Optional<Property> optionalProperty = propertyServiceImpl.findProperty("a.b.d");
+//        assertEquals(null, propertyServiceImpl.findProperty("a"));
     }
 
     @Test
@@ -70,5 +74,20 @@ class ModulePropertyApplicationTests {
 //    void changeParentTest(){
 //        assertEquals(true, propertyServiceImpl.changeParent("d","a.b.c"));
 //    }
+
+    @Test
+    void mapperTest(){
+        PropertyDto propertyDto = new PropertyDto();
+        propertyDto.setFullName("a.b.c");
+        propertyDto.setName("c");
+        propertyDto.setType(PropertyType.GROUP);
+
+        Property property = PropertyMapper.INSTANCE.propertyDtoToProperty(propertyDto);
+
+        assertEquals(propertyDto.getFullName(),property.getFullName());
+        assertEquals(propertyDto.getName(),property.getName());
+        assertEquals(propertyDto.getType(),property.getType());
+    }
+
 
 }

@@ -20,7 +20,7 @@
             </if>
          )
     </insert>
-    <select id="selectProperty" resultType="Property">
+    <select id="selectProperty" resultType="PropertyDto">
         SELECT name, full_name, type, value, created_at, updated_at
         FROM property
         <where>
@@ -33,13 +33,14 @@
         </where>
     </select>
     <!--    ..... -->
-    <select id="findAllValueTypeProperties" resultType="Property">
+    <select id="findAllValueTypeProperties" resultType="PropertyDto">
         SELECT name, full_name, type, value, created_at, updated_at
         FROM property
         WHERE type='value'
+        ORDER BY full_name
 -- 순서 정렬
     </select>
-    <select id="findChildProperties" resultType="Property">
+    <select id="findChildProperties" resultType="PropertyDto">
         SELECT name, full_name, type, value, created_at, updated_at
         FROM property
         WHERE parent_id = (SELECT id FROM property WHERE full_name = #{propertyFullName})

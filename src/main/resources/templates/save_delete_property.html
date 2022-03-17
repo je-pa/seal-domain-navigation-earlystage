@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>save</title>
+    <link rel="stylesheet" href="/css/save.css">
+</head>
+<body>
+    <form th:action="@{save}" method="post" th:object="${property}">
+        <span>save</span>
+        <input type="text" th:field="*{fullName}" placeholder="FullName">
+        <input type="text" th:field="*{value}" placeholder="value">
+        <input type="submit" value="save">
+    </form>
+    <form th:action="@{delete}" method="post" th:object="${property}">
+        <input type="hidden" name="_method" value="DELETE"/>
+        <span>delete</span>
+        <input type="text" th:field="*{fullName}" placeholder="FullName">
+        <input type="submit" value="delete">
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>FullName</th>
+                <th>Value</th>
+                <th>createdAt</th>
+                <th>updatedAt</th>
+                <th>type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="property : ${properties}">
+                <td th:text="${property.name}"></td>
+                <td th:text="${property.fullName}"></td>
+                <td th:text="${property.value}"></td>
+                <td th:text="${property.createdAt}"></td>
+                <td th:text="${property.updatedAt}"></td>
+                <td th:text="${property.type}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        findChildProperties
+    </h2>
+    <form th:action="@{findChildProperties}" th:object="${property}">
+        <input type="text" th:field="*{fullName}" placeholder="FullName">
+        <input type="submit" value="findChildProperties">
+    </form>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>FullName</th>
+            <th>Value</th>
+            <th>createdAt</th>
+            <th>updatedAt</th>
+            <th>type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="property : ${ChildProperties}">
+            <td th:text="${property.name}"></td>
+            <td th:text="${property.fullName}"></td>
+            <td th:text="${property.value}"></td>
+            <td th:text="${property.createdAt}"></td>
+            <td th:text="${property.updatedAt}"></td>
+            <td th:text="${property.type}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>
+        findProperty
+    </h2>
+    <form th:action="@{findProperty}" th:object="${property}">
+        <input type="text" th:field="*{fullName}" placeholder="FullName">
+        <input type="submit" value="findProperty">
+    </form>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>FullName</th>
+            <th>Value</th>
+            <th>createdAt</th>
+            <th>updatedAt</th>
+            <th>type</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${findProperty != null}" th:with="property=${findProperty}">
+            <td th:text="${property.name}"></td>
+            <td th:text="${property.fullName}"></td>
+            <td th:text="${property.value}"></td>
+            <td th:text="${property.createdAt}"></td>
+            <td th:text="${property.updatedAt}"></td>
+            <td th:text="${property.type}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>
+        findValue
+    </h2>
+    <form th:action="@{findValue}" th:object="${property}">
+        <input type="text" th:field="*{fullName}" placeholder="FullName">
+        <input type="submit" value="findValue">
+    </form>
+    <div th:text="${value}"></div>
+</body>
+</html>
