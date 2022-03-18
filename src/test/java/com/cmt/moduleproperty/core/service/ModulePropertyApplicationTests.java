@@ -1,8 +1,10 @@
-package com.cmt.moduleproperty;
+package com.cmt.moduleproperty.core.service;
 
-import com.cmt.moduleproperty.dto.PropertyDto;
-import com.cmt.moduleproperty.mapper.PropertyMapper;
-import com.cmt.moduleproperty.service.PropertyServiceImpl;
+import com.cmt.moduleproperty.api.NotFoundPropertyException;
+import com.cmt.moduleproperty.api.Property;
+import com.cmt.moduleproperty.api.PropertyType;
+import com.cmt.moduleproperty.core.dto.PropertyDto;
+import com.cmt.moduleproperty.core.mapper.PropertyMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +34,9 @@ class ModulePropertyApplicationTests {
 
     @Test
     void findValueTest(){
-        String value = propertyServiceImpl.findValue("adgae");
+        assertThrows(NotFoundPropertyException.class, ()->{
+            String value = propertyServiceImpl.findValue("sfhsfg");
+        });
 //        String value2 = propertyServiceImpl.findValue("a.b.c.d.g.h");
 //        String value3 = propertyServiceImpl.findValue("ta.b.c");
     }

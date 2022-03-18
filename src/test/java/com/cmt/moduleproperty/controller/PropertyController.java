@@ -1,7 +1,7 @@
 package com.cmt.moduleproperty.controller;
 
-import com.cmt.moduleproperty.Property;
-import com.cmt.moduleproperty.service.PropertyService;
+import com.cmt.moduleproperty.api.Property;
+import com.cmt.moduleproperty.api.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

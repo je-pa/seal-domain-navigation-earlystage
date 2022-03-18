@@ -1,9 +1,8 @@
-package com.cmt.moduleproperty.mapper;
+package com.cmt.moduleproperty.core.mapper;
 
-import com.cmt.moduleproperty.Property;
-import com.cmt.moduleproperty.dto.PropertyDto;
+import com.cmt.moduleproperty.api.Property;
+import com.cmt.moduleproperty.core.dto.PropertyDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper

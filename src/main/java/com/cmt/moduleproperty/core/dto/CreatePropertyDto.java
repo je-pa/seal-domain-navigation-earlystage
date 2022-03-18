@@ -1,6 +1,6 @@
-package com.cmt.moduleproperty.dto;
+package com.cmt.moduleproperty.core.dto;
 
-import com.cmt.moduleproperty.PropertyType;
+import com.cmt.moduleproperty.api.PropertyType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CreateSelectPropertyDto {
+public class CreatePropertyDto {
     Long id;
     String fullName;
     PropertyType type;

@@ -1,16 +1,14 @@
-package com.cmt.moduleproperty.dto;
+package com.cmt.moduleproperty.api;
 
-import com.cmt.moduleproperty.PropertyType;
+import com.cmt.moduleproperty.api.PropertyType;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@ToString
-public class PropertyDto {
+public class Property {
     String name;
     String fullName;
     PropertyType type;

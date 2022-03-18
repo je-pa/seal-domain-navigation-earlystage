@@ -1,4 +1,4 @@
-package com.cmt.moduleproperty.dto;
+package com.cmt.moduleproperty.core.dto;
 
 import lombok.Getter;
 import lombok.Setter;

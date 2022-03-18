@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>save</title>
-    <link rel="stylesheet" href="/css/save.css">
+    <link rel="stylesheet" th:href="@{/css/save.css}">
 </head>
 <body>
     <form th:action="@{save}" method="post" th:object="${property}">

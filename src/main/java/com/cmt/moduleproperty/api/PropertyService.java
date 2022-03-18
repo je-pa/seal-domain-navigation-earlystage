@@ -1,6 +1,4 @@
-package com.cmt.moduleproperty.service;
-
-import com.cmt.moduleproperty.Property;
+package com.cmt.moduleproperty.api;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +9,9 @@ import java.util.Optional;
  */
 public interface PropertyService {
     Property saveProperty(String propertyFullName, String value);
+//    Property createProperty(String propertyFullName, String value) throws DuplicatedPropertyFullNameException;
+    ///////중복키를 넣었을 때
+    ///Exception 던지기
     List<Property> findChildProperties(String propertyFullName);
     Optional<Property> findProperty(String propertyFullName); //optional
     String findValue(String propertyFullName);
