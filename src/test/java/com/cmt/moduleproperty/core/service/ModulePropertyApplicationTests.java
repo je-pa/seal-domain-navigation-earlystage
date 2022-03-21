@@ -1,6 +1,6 @@
 package com.cmt.moduleproperty.core.service;
 
-import com.cmt.moduleproperty.api.NotFoundPropertyException;
+import com.cmt.moduleproperty.api.PropertyNotFoundException;
 import com.cmt.moduleproperty.api.Property;
 import com.cmt.moduleproperty.api.PropertyType;
 import com.cmt.moduleproperty.core.dto.PropertyDto;
@@ -22,20 +22,22 @@ class ModulePropertyApplicationTests {
 
     @Test
     void savePropertyTest(){
-        Property property = propertyServiceImpl.saveProperty("b.c.d.g.h","abcb");
+        Property property = propertyServiceImpl.saveProperty("안","abcb");
 //        assertEquals("ta.es.ag.st",property.fullName);
 //        assertEquals("test11112",property.value);
     }
 
     @Test
     void findChildPropertiesTest(){
-        List<Property> propertyList = propertyServiceImpl.findChildProperties("a");
+        assertThrows(PropertyNotFoundException.class, ()-> {
+            List<Property> propertyList = propertyServiceImpl.findChildProperties("안");
+        });
     }
 
     @Test
     void findValueTest(){
-        assertThrows(NotFoundPropertyException.class, ()->{
-            String value = propertyServiceImpl.findValue("sfhsfg");
+        assertThrows(PropertyNotFoundException.class, ()->{
+            String value = propertyServiceImpl.findValue("sfdgaehsfg");
         });
 //        String value2 = propertyServiceImpl.findValue("a.b.c.d.g.h");
 //        String value3 = propertyServiceImpl.findValue("ta.b.c");
@@ -69,10 +71,10 @@ class ModulePropertyApplicationTests {
         propertyServiceImpl.updatePropertyValue("a","hii");
     }
 
-    @Test
-    void doPropertyExist(){
-        assertEquals(true , propertyServiceImpl.doPropertyExist("ta.b.c"));
-    }
+//    @Test
+//    void doPropertyExist(){
+//        assertEquals(true , propertyServiceImpl.doPropertyExist("ta.b.c"));
+//    }
 
 //    @Test
 //    void changeParentTest(){

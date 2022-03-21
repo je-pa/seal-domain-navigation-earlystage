@@ -9,6 +9,5 @@ import org.mapstruct.factory.Mappers;
 public interface PropertyMapper {
     PropertyMapper INSTANCE = Mappers.getMapper(PropertyMapper.class);
 
-//    @Mapping(source = "name", target = "name")
     Property propertyDtoToProperty(PropertyDto propertyDto);
 }

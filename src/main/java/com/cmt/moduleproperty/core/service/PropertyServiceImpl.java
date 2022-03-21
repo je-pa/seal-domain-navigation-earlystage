@@ -1,6 +1,6 @@
 package com.cmt.moduleproperty.core.service;
 
-import com.cmt.moduleproperty.api.NotFoundPropertyException;
+import com.cmt.moduleproperty.api.PropertyNotFoundException;
 import com.cmt.moduleproperty.api.Property;
 import com.cmt.moduleproperty.api.PropertyType;
 import com.cmt.moduleproperty.api.PropertyService;
@@ -23,30 +23,27 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     public Property saveProperty(String propertyFullName, String value) {
-        if(doPropertyExist(propertyFullName)){
-            return updatePropertyValue(propertyFullName, value).orElse(null);
+        if(findProperty(propertyFullName).isEmpty()){
+            createProperty(propertyFullName,PropertyType.VALUE);
         }
-        if(createProperty(propertyFullName,PropertyType.VALUE) != null){
-            return updatePropertyValue(propertyFullName, value).orElse(null);
-        }
-        return null;
+        updatePropertyValue(propertyFullName, value);
+
+        return findProperty(propertyFullName).get();
     }
 
     @Override
     public List<Property> findChildProperties(String propertyFullName) {
-        if(doPropertyExist(propertyFullName)){
-            return propertyRepository.findChildProperties(propertyFullName)
-                    .stream()
-                    .map(propertyDto-> PropertyMapper.INSTANCE.propertyDtoToProperty(propertyDto))
-                    .collect(Collectors.toList());
+        if(findProperty(propertyFullName).isEmpty()){
+            throw new PropertyNotFoundException();
         }
-        return null;
+        return propertyRepository.findChildProperties(propertyFullName)
+                .stream()
+                .map(propertyDto-> PropertyMapper.INSTANCE.propertyDtoToProperty(propertyDto))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<Property> findProperty(String propertyFullName){
-//        PropertyDto propertyDto = propertyRepository.selectProperty(createSelectPropertyDto);
-//        Property property = PropertyMapper.INSTANCE.propertyDtoToProperty(propertyDto);
         return Optional.ofNullable(
                 PropertyMapper.INSTANCE.propertyDtoToProperty(
                         propertyRepository.selectPropertyByFullName(propertyFullName)
@@ -56,9 +53,8 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     public String findValue(String propertyFullName) {
-        Optional<Property> propertyOptional = findProperty(propertyFullName);
-        if(propertyOptional.isEmpty()){
-            throw new NotFoundPropertyException();
+        if(findProperty(propertyFullName).isEmpty()){
+            throw new PropertyNotFoundException();
         }
         return findProperty(propertyFullName).map(Property::getValue).orElse(null);
     }
@@ -74,14 +70,14 @@ public class PropertyServiceImpl implements PropertyService {
 
     @Override
     public boolean deleteProperty(String propertyFullName) {
-        if(doPropertyExist(propertyFullName) && findChildProperties(propertyFullName).size()>0){
+        if(findProperty(propertyFullName).isPresent() && findChildProperties(propertyFullName).size()>0){
             return false;
         }
         return (propertyRepository.deleteProperty(propertyFullName) == 1);
     }
 
     Property createProperty(String propertyFullName, PropertyType propertyType){
-        if(doPropertyExist(propertyFullName)){
+        if(findProperty(propertyFullName).isPresent()){
             return null;
         }
         CreatePropertyDto createSelectPropertyDto = new CreatePropertyDto();
@@ -89,7 +85,7 @@ public class PropertyServiceImpl implements PropertyService {
 
         String parentFullName = createSelectPropertyDto.getParentFullName();
         if(parentFullName != null){
-            if(!doPropertyExist(parentFullName)){
+            if(findProperty(propertyFullName).isEmpty()){
                 createProperty(parentFullName, PropertyType.GROUP); //
             }else if(findProperty(parentFullName)
                     .map(Property :: getType)
@@ -114,8 +110,5 @@ public class PropertyServiceImpl implements PropertyService {
         return Optional.empty();
     }
 
-    boolean doPropertyExist(String propertyFullName){
-        return findProperty(propertyFullName).isPresent();
-    }
 
 }
