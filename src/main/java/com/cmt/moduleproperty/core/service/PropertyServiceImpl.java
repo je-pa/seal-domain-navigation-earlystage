@@ -1,9 +1,6 @@
 package com.cmt.moduleproperty.core.service;
 
-import com.cmt.moduleproperty.api.PropertyNotFoundException;
-import com.cmt.moduleproperty.api.Property;
-import com.cmt.moduleproperty.api.PropertyType;
-import com.cmt.moduleproperty.api.PropertyService;
+import com.cmt.moduleproperty.api.*;
 import com.cmt.moduleproperty.core.dto.CreatePropertyDto;
 import com.cmt.moduleproperty.core.mapper.PropertyMapper;
 import com.cmt.moduleproperty.core.repository.PropertyRepository;
@@ -85,13 +82,13 @@ public class PropertyServiceImpl implements PropertyService {
 
         String parentFullName = createSelectPropertyDto.getParentFullName();
         if(parentFullName != null){
-            if(findProperty(propertyFullName).isEmpty()){
-                createProperty(parentFullName, PropertyType.GROUP); //
+            if(findProperty(parentFullName).isEmpty()){
+                createProperty(parentFullName, PropertyType.GROUP);
             }else if(findProperty(parentFullName)
                     .map(Property :: getType)
                     .orElse(null) != PropertyType.GROUP
             ){
-                return null;
+                throw new BadRequestException(parentFullName+"'s PropertyType is not "+ PropertyType.GROUP);
             }
         }
 
@@ -109,6 +106,4 @@ public class PropertyServiceImpl implements PropertyService {
         }
         return Optional.empty();
     }
-
-
 }

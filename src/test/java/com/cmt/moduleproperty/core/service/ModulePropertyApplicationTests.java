@@ -1,5 +1,6 @@
 package com.cmt.moduleproperty.core.service;
 
+import com.cmt.moduleproperty.api.BadRequestException;
 import com.cmt.moduleproperty.api.PropertyNotFoundException;
 import com.cmt.moduleproperty.api.Property;
 import com.cmt.moduleproperty.api.PropertyType;
@@ -22,7 +23,10 @@ class ModulePropertyApplicationTests {
 
     @Test
     void savePropertyTest(){
-        Property property = propertyServiceImpl.saveProperty("안","abcb");
+
+        assertThrows(BadRequestException.class, ()-> {
+            Property property = propertyServiceImpl.saveProperty("ta.a.c","abcb");
+        });
 //        assertEquals("ta.es.ag.st",property.fullName);
 //        assertEquals("test11112",property.value);
     }
@@ -57,7 +61,7 @@ class ModulePropertyApplicationTests {
     void createPropertyTest() {
         Property property = propertyServiceImpl.createProperty("main.sub.su.s.s1", PropertyType.VALUE);
 
-//        assertEquals("a", property.getName());
+        assertEquals("a", property.getName());
     }
 
     @Test

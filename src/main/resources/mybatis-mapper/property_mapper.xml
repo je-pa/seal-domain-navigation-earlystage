@@ -30,13 +30,11 @@
         FROM property
         WHERE full_name = #{fullName}
     </select>
-    <!--    ..... -->
     <select id="findAllValueTypeProperties" resultType="PropertyDto">
         SELECT name, full_name, type, value, created_at, updated_at
         FROM property
         WHERE type='value'
         ORDER BY full_name
--- 순서 정렬
     </select>
     <select id="findChildProperties" resultType="PropertyDto">
         SELECT name, full_name, type, value, created_at, updated_at
